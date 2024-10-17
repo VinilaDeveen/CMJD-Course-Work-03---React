@@ -8,7 +8,7 @@ function Customerview() {
         <div>
           <Sidebar/>
         </div>
-        <div>
+        <div className='w-full'>
           <div className='p-10 shadow-xl rounded-lg text-slate-600 m-10'>
             <div className='flex flex-nowrap'>
               <div>
@@ -46,29 +46,29 @@ function Customerview() {
             </div>
 
           </div>
-          <div className="p-10 shadow-xl rounded-lg text-slate-600 mx-10">
+          <div className="p-20 shadow-xl rounded-lg text-slate-600 mx-10">
             <div className="title">
             <span className='font-extrabold text-xl'>Update Information</span>
             </div>
             <div className="flex flex-wrap grid gap-4 grid-cols-2 mt-5">
               <div>
                 <label className='flex'>Name</label>
-                <input type="text" placeholder='Enter your name' className='border-b-2 border-slate-400 w-[500px] pt-2 outline-none placeholder:text-slate-400'/>
+                <input type="text" placeholder='Enter your name' className='border-b-2 border-slate-400 w-full pt-2 outline-none placeholder:text-slate-400'/>
               </div>
 
               <div>
                 <label className='flex'>Address</label>
-                <input type="text" placeholder='Enter your address' className='border-b-2 border-slate-400 w-[500px] pt-2 outline-none placeholder:text-slate-400'/>
+                <input type="text" placeholder='Enter your address' className='border-b-2 border-slate-400 w-full pt-2 outline-none placeholder:text-slate-400'/>
               </div>
 
               <div>
                 <label className='flex'>City</label>
-                <input type="text" placeholder='Enter your city' className='border-b-2 border-slate-400 w-[500px] pt-2 outline-none placeholder:text-slate-400'/>
+                <input type="text" placeholder='Enter your city' className='border-b-2 border-slate-400 w-full pt-2 outline-none placeholder:text-slate-400'/>
               </div>
 
               <div>
                 <label className='flex'>Phone no</label>
-                <input type="text" placeholder='Enter your phone no' className='border-b-2 border-slate-400 w-[500px] pt-2 outline-none placeholder:text-slate-400'/>
+                <input type="text" placeholder='Enter your phone no' className='border-b-2 border-slate-400 w-full pt-2 outline-none placeholder:text-slate-400'/>
               </div>
 
               <div>
