@@ -12,11 +12,11 @@ function Newcustomer() {
             <div>
             <span className='font text-3xl text-slate-600 mx-5'>Add New Customer</span>
             </div>
-            <div className='flex flex-nowrap m-10 shadow-2xl rounded-3xl w-full'>
-                <div>
+            <div className='flex m-10 shadow-2xl rounded-3xl w-full'>
+                <div className='my-40'>
                 <PersonAddAltRoundedIcon 
                             sx={{ fontSize: { xs: 60, sm: 100, md: 150 } }} 
-                            className='text-slate-800 mx-4 my-10 sm:mx-20 sm:my-20 md:mx-10 md:my-20' 
+                            className='text-slate-800 mx-4 my-10 sm:mx-20 sm:my-20 md:m-20 md:my-20' 
                         />
                 </div>
                 <div className='p-10 w-full'>
