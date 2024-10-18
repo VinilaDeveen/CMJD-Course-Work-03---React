@@ -1,5 +1,5 @@
 import React from 'react'
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import PointOfSaleRoundedIcon from '@mui/icons-material/PointOfSaleRounded';
 import Sidebar from '../../component/sidebar/Sidebar';
 
 function Saleview() {
@@ -15,7 +15,7 @@ function Saleview() {
                 <span className='font-extrabold text-xl mx-5'>Order Information</span>
               </div>
               <div className='px-10'>
-                <PersonRoundedIcon sx={{ fontSize: 100 }}/>
+                <PointOfSaleRoundedIcon sx={{ fontSize: 100 }}/>
               </div>
               <div className="info">
                 <div>
@@ -41,6 +41,11 @@ function Saleview() {
                 <div>
                   <span className='font-bold'>Order date & time: </span>
                   <span>2024-09-23 16:28:18.408579</span>
+                </div>
+
+                <div>
+                  <span className='font-bold'>Total: </span>
+                  <span>Rs.4000.00</span>
                 </div>
 
               </div>

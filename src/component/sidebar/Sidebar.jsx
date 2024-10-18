@@ -31,7 +31,7 @@ const Sidebar = () => {
                         </li>
                     </Link>
 
-                    <Link to="/home" style={{textDecoration:"none"}}>
+                    <Link to="/itemtable" style={{textDecoration:"none"}}>
                         <li className='flex items-center px-5 sm:px-14 py-3 hover:bg-slate-50'>
                             <LocalMallRoundedIcon sx={{fontSize:30}}/>
                             <span className='ml-2'>Item</span>
