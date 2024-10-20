@@ -7,56 +7,70 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { Link } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Grid from '@mui/material/Grid';
-
-const columns = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  { field: 'custName', headerName: 'Name', width: 200 },
-  { field: 'custAddress', headerName: 'Address', width: 250 },
-  { field: 'city', headerName: 'City', width: 150 },
-];
-
-const actionColumn = [
-  {
-    field: 'action',
-    headerName: 'Action',
-    width: 350,
-    renderCell: (params) => {
-      return (
-        <div className='flex gap-2'>
-          <Link to={`/customertable/customerview`}>
-            <div className='bg-cover mt-2 px-2 h-[35px] bg-blue-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-blue-900'>
-              <RemoveRedEyeRoundedIcon className='mr-2' />
-              View
-            </div>
-          </Link>
-          <Link to={``} style={{ textDecoration: 'none' }}>
-            <div
-              className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900'
-              onClick={() => handleDelete(params.row.patientID)}
-            >
-              <DeleteRoundedIcon className='mr-2' />
-              Delete
-            </div>
-          </Link>
-        </div>
-      );
-    },
-  },
-];
-
-const rows = [
-  { id: 1, custName: 'Danapala', custAddress: 'No.20 Walana', city: 'Panadura' },
-  { id: 2, custName: 'Gunapala', custAddress: 'No 200, Thalpitiya', city: 'Wadduwa' },
-  { id: 3, custName: 'Amarapala', custAddress: 'No 100, Horawala', city: 'Matugama' },
-  { id: 4, custName: 'Somapala', custAddress: 'No .10, Ginigama', city: 'Galle' },
-  { id: 5, custName: 'Jinapala', custAddress: 'No122, Anuradhapura Road', city: 'Kurunegala' },
-  { id: 6, custName: 'Gnanawathee', custAddress: 'No. 43, St Peters Road', city: 'Negambo' },
-  { id: 7, custName: 'Amarawathee', custAddress: 'No 12, Rathnapura Road', city: 'Madampe' },
-  { id: 8, custName: 'Leelawathee', custAddress: 'No. 234, Attidiya Road', city: 'Dehiwala' },
-  { id: 9, custName: 'Gunawathee', custAddress: 'No. 230, Galle Road', city: 'Ambalangoda' },
-];
+import axios from 'axios';
 
 function Customertable() {
+  const [customers, setCustomers] = React.useState([]);
+
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'custname', headerName: 'Name', width: 200 },
+    { field: 'address', headerName: 'Address', width: 250 },
+    { field: 'city', headerName: 'City', width: 150 },
+  ];
+
+  const actionColumn = [
+    {
+      field: 'action',
+      headerName: 'Action',
+      width: 350,
+      renderCell: (params) => {
+        return (
+          <div className='flex gap-2'>
+            <Link to={`/customertable/${params.row.id}`}>
+              <div className='bg-cover mt-2 px-2 h-[35px] bg-blue-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-blue-900'>
+                <RemoveRedEyeRoundedIcon className='mr-2' />
+                View
+              </div>
+            </Link>
+              <div
+                className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900'
+                onClick={() => handleDelete(params.row.id)}
+              >
+                <DeleteRoundedIcon className='mr-2' />
+                Delete
+              </div>
+          </div>
+        );
+      },
+    },
+  ];
+
+  React.useEffect(() => {
+    loadCustomers();
+  }, []);
+
+  async function loadCustomers() {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/customer`);
+      setCustomers(response.data);
+    } catch (error) {
+      console.error("There was an error fetching the customer list!", error);
+    }
+  }
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this customer?")) {
+      axios.delete(`http://localhost:8080/api/v1/customer/${id}`)
+        .then(response => {
+          loadCustomers();
+        })
+        .catch(error => {
+          console.error("There was an error deleting the customer!", error);
+        });
+    }
+  };
+
   return (
     <div className='flex'>
       <div>
@@ -79,7 +93,7 @@ function Customertable() {
           </Grid>
           <Box className='pt-5'>
             <DataGrid
-              rows={rows}
+              rows={customers}
               columns={columns.concat(actionColumn)}
               initialState={{
                 pagination: {
@@ -101,4 +115,3 @@ function Customertable() {
 }
 
 export default Customertable;
-

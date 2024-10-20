@@ -7,11 +7,25 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { Link } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Grid from '@mui/material/Grid';
+import axios from 'axios';
+  
+  
+  /*const rows = [
+    { id: 1, categoryName: 'Fruit'},
+    { id: 2, categoryName: 'Short Eat'},
+    { id: 3, categoryName: 'Medicine'},
+    { id: 4, categoryName: 'Clothes'},
+    { id: 5, categoryName: 'Toys'},
+    { id: 6, categoryName: 'Grosseries'}
+  ];*/
 
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 90 },
-        { field: 'categoryName', headerName: 'Category', width: 200 }
-    ];
+function Categorytable() {
+  const[categories, setCategories] = React.useState([]);
+
+  const columns = [
+    { field: 'categoryId', headerName: 'ID', width: 90 },
+    { field: 'categoryName', headerName: 'Category', width: 200 }
+  ];
   
   const actionColumn = [
     {
@@ -41,17 +55,19 @@ import Grid from '@mui/material/Grid';
       },
     },
   ];
-  
-  const rows = [
-    { id: 1, categoryName: 'Fruit'},
-    { id: 2, categoryName: 'Short Eat'},
-    { id: 3, categoryName: 'Medicine'},
-    { id: 4, categoryName: 'Clothes'},
-    { id: 5, categoryName: 'Toys'},
-    { id: 6, categoryName: 'Grosseries'}
-  ];
 
-function Categorytable() {
+  React.useEffect(() => {
+    loadCategory();
+  },[]);
+
+  async function loadCategory() {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/category`);
+      setCategories(response.data);
+    } catch (error) {
+      console.error("There was an error fetching the category list!", error);
+    }
+  }
   return (
     <div className='flex'>
       <div>
@@ -74,8 +90,9 @@ function Categorytable() {
           </Grid>
           <Box className='pt-5'>
             <DataGrid
-              rows={rows}
+              rows={categories}
               columns={columns.concat(actionColumn)}
+              getRowId={(row) => row.categoryId}
               initialState={{
                 pagination: {
                   paginationModel: {

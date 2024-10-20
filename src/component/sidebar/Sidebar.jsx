@@ -9,9 +9,9 @@ import { Link } from 'react-router-dom';
 const Sidebar = () => {
     return (
         <div className='bg-slate-300 w-full w-full h-screen'>
-            <div className='px-10 py-5 sm:px-[100px]'>
+            <div className='px-5 py-5 sm:px-[50px]'>
                 <Link to="/">
-                    <span className='font-bold text-4xl sm:text-5xl'>Kade</span>
+                    <span className='font-bold text-2xl sm:text-3xl'>ShopMaster</span>
                 </Link> 
             </div>
             <hr/>
