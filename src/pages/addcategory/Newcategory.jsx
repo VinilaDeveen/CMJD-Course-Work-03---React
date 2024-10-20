@@ -1,8 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import Sidebar from '../../component/sidebar/Sidebar';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Newcategory() {
+    const navigate = useNavigate();
+    const [category, setCategory] = useState('');
+
+    async function handleSubmit() {
+        const data = {
+            categoryName : category
+        };
+
+        const response = await axios.post(`http://localhost:8080/api/v1/category`,data)
+          .then(response => {
+            console.log('Category details updated:', response.data);
+        })
+        .catch(error => {
+            console.error("There was an error updating the category!", error);
+        });
+        navigate(`/categorytable`)
+    }
+
   return (
     <div className='flex'>
         <div>
@@ -22,11 +42,22 @@ function Newcategory() {
                 <div className='p-10 w-full'>
                     <div className='w-full py-20'>
                         <label className='flex pt-8 text-lg text-slate-800'>Category:</label>
-                        <input type="text" placeholder='Enter your category' className='border-b-2 border-slate-300 w-full pt-3 outline-none placeholder:text-slate-400'/>
+                        <input 
+                            type="text" 
+                            name='category'
+                            onChange={(e) => setCategory(e.target.value)}
+                            placeholder='Enter your category' 
+                            className='border-b-2 border-slate-300 w-full pt-3 outline-none placeholder:text-slate-400'
+                        />
                     </div>
 
                     <div className='w-full'>
-                        <input type="button" value="Save" className='flex bg-slate-800 text-slate-50 mt-10 mb-5 px-20 py-2 rounded-xl hover:bg-slate-900'/>
+                        <input 
+                            type="button" 
+                            value="Save" 
+                            className='flex bg-slate-800 text-slate-50 mt-10 mb-5 px-20 py-2 rounded-xl hover:bg-slate-900'
+                            onClick={handleSubmit}
+                        />
                     </div>
                 </div>
             </div>

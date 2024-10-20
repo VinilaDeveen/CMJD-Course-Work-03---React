@@ -1,8 +1,41 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import Sidebar from '../../component/sidebar/Sidebar';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function Categoryview() {
+  const{categoryId} = useParams();
+  const[items, setItems] = useState([]);
+  const[categoryName, setCategoryName] = useState('');
+
+  useEffect(() => {
+    loadCategoryDetails();
+  },[categoryId])
+
+  async function loadCategoryDetails() {
+    const response = await axios.get(`http://localhost:8080/api/v1/category/${categoryId}`)
+    .then( response => {
+      setCategoryName(response.data.categoryName);
+      setItems(response.data.items);
+    })
+    .catch(error => {
+      console.error("There was an error fetching the category details!", error);
+    })
+  }
+
+  const handleSubmit = (e) => {
+    const category = {categoryId,categoryName};
+
+    const response = axios.put(`http://localhost:8080/api/v1/customer/${id}`,category)
+      .then(response => {
+        console.log('Category details updated:', response.data);
+    })
+    .catch(error => {
+        console.error("There was an error updating the category!", error);
+    });
+  };
+
   return (
     <div className='flex'>
         <div>
@@ -20,12 +53,12 @@ function Categoryview() {
               <div className="info">
                 <div>
                   <span className='font-bold'>ID: </span>
-                  <span>1</span>
+                  <span>{categoryId}</span>
                 </div>
 
                 <div>
                   <span className='font-bold'>Category: </span>
-                  <span>Toys</span>
+                  <span>{categoryName}</span>
                 </div>
               </div>
             </div>
@@ -45,35 +78,16 @@ function Categoryview() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td className='border-2 text-center'>1</td>
-                            <td className='border-2 text-center'>rice 1kg</td>
-                            <td className='border-2 text-center'>Rs. 200.00</td>
-                        </tr>
 
-                        <tr>
-                            <td className='border-2 text-center'>1</td>
-                            <td className='border-2 text-center'>rice 1kg</td>
-                            <td className='border-2 text-center'>Rs. 200.00</td>
-                        </tr>
-
-                        <tr>
-                            <td className='border-2 text-center'>1</td>
-                            <td className='border-2 text-center'>rice 1kg</td>
-                            <td className='border-2 text-center'>Rs. 200.00</td>
-                        </tr>
-
-                        <tr>
-                            <td className='border-2 text-center'>1</td>
-                            <td className='border-2 text-center'>rice 1kg</td>
-                            <td className='border-2 text-center'>Rs. 200.00</td>
-                        </tr>
-
-                        <tr>
-                            <td className='border-2 text-center'>1</td>
-                            <td className='border-2 text-center'>rice 1kg</td>
-                            <td className='border-2 text-center'>Rs. 200.00</td>
-                        </tr>
+                        {items.map( function (item) {
+                          return (
+                            <tr>
+                              <td className='border-2 text-center'>{item.itemId}</td>
+                              <td className='border-2 text-center'>{item.name}</td>
+                              <td className='border-2 text-center'>{item.unitPrice}</td>
+                          </tr>
+                          )
+                        })}
                     </tbody>
                 </table>
             </div>

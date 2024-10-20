@@ -8,16 +8,6 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
-  
-  
-  /*const rows = [
-    { id: 1, categoryName: 'Fruit'},
-    { id: 2, categoryName: 'Short Eat'},
-    { id: 3, categoryName: 'Medicine'},
-    { id: 4, categoryName: 'Clothes'},
-    { id: 5, categoryName: 'Toys'},
-    { id: 6, categoryName: 'Grosseries'}
-  ];*/
 
 function Categorytable() {
   const[categories, setCategories] = React.useState([]);
@@ -35,21 +25,19 @@ function Categorytable() {
       renderCell: (params) => {
         return (
           <div className='flex gap-2'>
-            <Link to={`/categorytable/categoryview`}>
+            <Link to={`/categorytable/${params.row.categoryId}`}>
               <div className='bg-cover mt-2 px-2 h-[35px] bg-blue-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-blue-900'>
                 <RemoveRedEyeRoundedIcon className='mr-2' />
                 View
               </div>
             </Link>
-            <Link to={``} style={{ textDecoration: 'none' }}>
-              <div
+            <div
                 className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900'
-                onClick={() => handleDelete(params.row.patientID)}
+                onClick={() => handleDelete(params.row.categoryId)}
               >
                 <DeleteRoundedIcon className='mr-2' />
                 Delete
               </div>
-            </Link>
           </div>
         );
       },
@@ -68,6 +56,19 @@ function Categorytable() {
       console.error("There was an error fetching the category list!", error);
     }
   }
+
+  const handleDelete = (categoryId) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      axios.delete(`http://localhost:8080/api/v1/category/${categoryId}`)
+        .then(response => {
+          loadCategory();
+        })
+        .catch(error => {
+          console.error("There was an error deleting the category!", error);
+        });
+    }
+  };
+
   return (
     <div className='flex'>
       <div>

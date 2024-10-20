@@ -33,10 +33,10 @@ function Customerview() {
 
     const response = axios.put(`http://localhost:8080/api/v1/customer/${id}`,customer)
       .then(response => {
-        console.log('Patient details updated:', response.data);
+        console.log('Category details updated:', response.data);
     })
     .catch(error => {
-        console.error("There was an error updating the patient!", error);
+        console.error("There was an error updating the category!", error);
     });
   };
 
