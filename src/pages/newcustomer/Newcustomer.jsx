@@ -22,7 +22,7 @@ function Newcustomer() {
 
         const response = await axios.post(`http://localhost:8080/api/v1/customer`,data)
           .then(response => {
-            console.log('Patient details updated:', response.data);
+            console.log('Customer details updated:', response.data);
         })
         .catch(error => {
             console.error("There was an error updating the customer!", error);

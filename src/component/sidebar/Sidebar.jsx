@@ -5,13 +5,14 @@ import LocalMallRoundedIcon from '@mui/icons-material/LocalMallRounded';
 import PointOfSaleRoundedIcon from '@mui/icons-material/PointOfSaleRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { Link } from 'react-router-dom';
+import Logo from '../../assets/Logo.png'
 
 const Sidebar = () => {
     return (
         <div className='bg-slate-300 w-full w-full h-screen'>
-            <div className='px-5 py-5 sm:px-[50px]'>
+            <div className='py-2 px-2 sm:px-[50px]'>
                 <Link to="/">
-                    <span className='font-bold text-2xl sm:text-3xl'>ShopMaster</span>
+                    <img src={Logo} className='w-[150px]'/>
                 </Link> 
             </div>
             <hr/>

@@ -7,27 +7,49 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { Link } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Grid from '@mui/material/Grid';
-
-
-
-const rows = [
-  { id: 1, itemName: 'Soap', quantity: '10', unitprice: 'Rs. 120.00', category: 'Grossery'},
-  { id: 1, itemName: 'Soap', quantity: '10', unitprice: 'Rs. 120.00', category: 'Grossery'},
-  { id: 1, itemName: 'Soap', quantity: '10', unitprice: 'Rs. 120.00', category: 'Grossery'},
-  { id: 1, itemName: 'Soap', quantity: '10', unitprice: 'Rs. 120.00', category: 'Grossery'},
-  { id: 1, itemName: 'Soap', quantity: '10', unitprice: 'Rs. 120.00', category: 'Grossery'},
-  { id: 1, itemName: 'Soap', quantity: '10', unitprice: 'Rs. 120.00', category: 'Grossery'},
-];
+import axios from 'axios';
 
 function Itemtable() {
+  const [items, setItems] = React.useState([]);
+
+  React.useEffect(() => {
+    loadItems();
+  }, []);
+
+  async function loadItems() {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/item`);
+      const updatedItems = response.data.map(item => ({
+        ...item,
+        category: item.category.categoryName // Map category name for each item
+      }));
+      setItems(updatedItems);
+    } catch (error) {
+      console.error('There was an error fetching the item list!', error);
+    }
+  }
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/v1/item/${id}`);
+      setItems(items.filter((item) => item.itemId !== id));
+    } catch (error) {
+      console.error('There was an error deleting the item!', error);
+    }
+  };
+
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    { field: 'itemName', headerName: 'Item', width: 150 },
-    { field: 'quantity', headerName: 'Quantity', width: 100 },
-    { field: 'unitprice', headerName: 'Unit Price', width: 120 },
-    { field: 'category', headerName: 'Category', width: 200 },
+    { field: 'itemId', headerName: 'ID', width: 90 },
+    { field: 'name', headerName: 'Item', width: 150 },
+    { field: 'qty', headerName: 'Quantity', width: 100 },
+    { field: 'unitPrice', headerName: 'Unit Price', width: 120 },
+    {
+      field: 'category', // Display category name
+      headerName: 'Category',
+      width: 200,
+    },
   ];
-  
+
   const actionColumn = [
     {
       field: 'action',
@@ -36,26 +58,25 @@ function Itemtable() {
       renderCell: (params) => {
         return (
           <div className='flex gap-2'>
-            <Link to={`/itemtable/itemview`}>
+            <Link to={`/itemtable/${params.row.itemId}`}>
               <div className='bg-cover mt-2 px-2 h-[35px] bg-blue-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-blue-900'>
                 <RemoveRedEyeRoundedIcon className='mr-2' />
                 View
               </div>
             </Link>
-            <Link to={``} style={{ textDecoration: 'none' }}>
-              <div
-                className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900'
-                onClick={() => handleDelete(params.row.patientID)}
-              >
-                <DeleteRoundedIcon className='mr-2' />
-                Delete
-              </div>
-            </Link>
+            <div
+              className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900'
+              onClick={() => handleDelete(params.row.itemId)}
+            >
+              <DeleteRoundedIcon className='mr-2' />
+              Delete
+            </div>
           </div>
         );
       },
     },
   ];
+
   return (
     <div className='flex'>
       <div>
@@ -63,14 +84,14 @@ function Itemtable() {
       </div>
       <div className='flex-1'>
         <div className='container py-10 px-3 lg:px-10'>
-          <Grid container justifyContent="space-between" alignItems="center" className='mb-5'>
+          <Grid container justifyContent='space-between' alignItems='center' className='mb-5'>
             <Grid item>
               <span className='text-xl text-slate-600'>Item List</span>
             </Grid>
             <Grid item>
               <Link to='/itemtable/additem' style={{ textDecoration: 'none' }}>
-                <span className='p-2 border-solid border-2 border-green-700 rounded-lg top- right-[50px] text-green-700 hover:border-slate-900 hover:text-slate-900'>
-                  <AddCircleRoundedIcon className='mr-2 hover:text-slate-900'/>
+                <span className='p-2 border-solid border-2 border-green-700 rounded-lg text-green-700 hover:border-slate-900 hover:text-slate-900'>
+                  <AddCircleRoundedIcon className='mr-2 hover:text-slate-900' />
                   Add New
                 </span>
               </Link>
@@ -78,12 +99,13 @@ function Itemtable() {
           </Grid>
           <Box className='pt-5'>
             <DataGrid
-              rows={rows}
+              rows={items}
               columns={columns.concat(actionColumn)}
+              getRowId={(row) => row.itemId}
               initialState={{
                 pagination: {
                   paginationModel: {
-                    pageSize: 2,
+                    pageSize: 9,
                   },
                 },
               }}
@@ -96,7 +118,7 @@ function Itemtable() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Itemtable
+export default Itemtable;

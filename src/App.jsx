@@ -30,7 +30,7 @@ function App() {
           <Route path='/categorytable/addcategory' element={<Newcategory/>}/>
           <Route path='/itemtable/additem' element={<Newitem/>}/>
           <Route path='/categorytable/:categoryId' element={<Categoryview/>}/>
-          <Route path='/itemtable/itemview' element={<Itemview/>}/>
+          <Route path='/itemtable/:itemId' element={<Itemview/>}/>
           <Route path='/sales/addsale' element={<Addsale/>}/>
         </Routes>
       </BrowserRouter>
