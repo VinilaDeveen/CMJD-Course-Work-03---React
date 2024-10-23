@@ -59,9 +59,9 @@ function Customertable() {
     }
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = (custId) => {
     if (window.confirm("Are you sure you want to delete this customer?")) {
-      axios.delete(`http://localhost:8080/api/v1/customer/${id}`)
+      axios.delete(`http://localhost:8080/api/v1/customer/${custId}`)
         .then(response => {
           loadCustomers();
         })

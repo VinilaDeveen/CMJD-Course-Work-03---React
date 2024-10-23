@@ -29,12 +29,15 @@ function Itemtable() {
     }
   }
 
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8080/api/v1/item/${id}`);
-      setItems(items.filter((item) => item.itemId !== id));
-    } catch (error) {
-      console.error('There was an error deleting the item!', error);
+  const handleDelete = (itemId) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      axios.delete(`http://localhost:8080/api/v1/item/${itemId}`)
+        .then(response => {
+          loadItems();
+        })
+        .catch(error => {
+          console.error("There was an error deleting the item!", error);
+        });
     }
   };
 

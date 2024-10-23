@@ -26,7 +26,7 @@ function App() {
           <Route path='/itemtable' element={<Itemtable/>}/>
           <Route path='/customertable/newcustomer' element={<Newcustomer/>}/>
           <Route path='/customertable/:id' element={<Customerview/>}/>
-          <Route path='/salestable/saleview' element={<Saleview/>}/>
+          <Route path='/salestable/:saleId' element={<Saleview/>}/>
           <Route path='/categorytable/addcategory' element={<Newcategory/>}/>
           <Route path='/itemtable/additem' element={<Newitem/>}/>
           <Route path='/categorytable/:categoryId' element={<Categoryview/>}/>
