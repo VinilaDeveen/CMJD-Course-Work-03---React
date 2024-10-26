@@ -8,8 +8,11 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 function Categorytable() {
+  const {isAuthenticated, jwtToken} = useAuth();
+
   const[categories, setCategories] = React.useState([]);
 
   const columns = [
@@ -32,7 +35,7 @@ function Categorytable() {
               </div>
             </Link>
             <div
-                className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900'
+                className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900 cursor-pointer'
                 onClick={() => handleDelete(params.row.categoryId)}
               >
                 <DeleteRoundedIcon className='mr-2' />
@@ -44,13 +47,21 @@ function Categorytable() {
     },
   ];
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`
+    }
+  }
+
   React.useEffect(() => {
-    loadCategory();
-  },[]);
+    if(isAuthenticated) {
+      loadCategory();
+    }
+  },[isAuthenticated]);
 
   async function loadCategory() {
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/category`);
+      const response = await axios.get(`http://localhost:8080/api/v1/category`, config);
       setCategories(response.data);
     } catch (error) {
       console.error("There was an error fetching the category list!", error);
@@ -59,7 +70,7 @@ function Categorytable() {
 
   const handleDelete = (categoryId) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
-      axios.delete(`http://localhost:8080/api/v1/category/${categoryId}`)
+      axios.delete(`http://localhost:8080/api/v1/category/${categoryId}`, config)
         .then(response => {
           loadCategory();
         })

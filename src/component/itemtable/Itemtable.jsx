@@ -8,20 +8,30 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 function Itemtable() {
+  const { isAuthenticated, jwtToken } = useAuth();
   const [items, setItems] = React.useState([]);
 
   React.useEffect(() => {
-    loadItems();
-  }, []);
+    if (isAuthenticated) {
+      loadItems();
+    }
+  }, [isAuthenticated]);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`
+    }
+  }
 
   async function loadItems() {
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/item`);
+      const response = await axios.get(`http://localhost:8080/api/v1/item`, config);
       const updatedItems = response.data.map(item => ({
         ...item,
-        category: item.category.categoryName // Map category name for each item
+        category: item.category.categoryName
       }));
       setItems(updatedItems);
     } catch (error) {
@@ -46,11 +56,7 @@ function Itemtable() {
     { field: 'name', headerName: 'Item', width: 150 },
     { field: 'qty', headerName: 'Quantity', width: 100 },
     { field: 'unitPrice', headerName: 'Unit Price', width: 120 },
-    {
-      field: 'category', // Display category name
-      headerName: 'Category',
-      width: 200,
-    },
+    { field: 'category', headerName: 'Category', width: 200 },
   ];
 
   const actionColumn = [
@@ -68,7 +74,7 @@ function Itemtable() {
               </div>
             </Link>
             <div
-              className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900'
+              className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900 cursor-pointer'
               onClick={() => handleDelete(params.row.itemId)}
             >
               <DeleteRoundedIcon className='mr-2' />

@@ -3,8 +3,11 @@ import LocalMallRoundedIcon from '@mui/icons-material/LocalMallRounded';
 import Sidebar from '../../component/sidebar/Sidebar';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 function Itemview() {
+  const{ isAuthenticated, jwtToken } = useAuth();
+
   const[categories, setCategories] = useState([]);
   const{itemId} = useParams();
   const[name, setName] = useState('');
@@ -14,12 +17,20 @@ function Itemview() {
   const[categoryName, setCategoryName] = useState('');
 
   useEffect(() => {
-    loadItemDetails();
-    loadCategories();
-  },[])
+    if (isAuthenticated) {
+      loadItemDetails();
+      loadCategories();
+    }
+  },[isAuthenticated])
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`
+    }
+  }
 
   async function loadItemDetails() {
-    const response = await axios.get(`http://localhost:8080/api/v1/item/${itemId}`)
+    const response = await axios.get(`http://localhost:8080/api/v1/item/${itemId}`,config)
     .then( response => {
       setName(response.data.name);
       setQty(response.data.qty);
@@ -34,7 +45,7 @@ function Itemview() {
 
   async function loadCategories() {
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/category`);
+      const response = await axios.get(`http://localhost:8080/api/v1/category`,config);
       setCategories(response.data);
     } catch (error) {
       console.error("There was an error fetching the category list!", error);
@@ -54,7 +65,7 @@ function Itemview() {
     loadItemDetails();
   
     try {
-      const response = await axios.put(`http://localhost:8080/api/v1/item/${itemId}`, item);
+      const response = await axios.put(`http://localhost:8080/api/v1/item/${itemId}`, item, config);
       console.log('Item details updated:', response.data);
     } catch (error) {
       console.error("There was an error updating the item!", error);

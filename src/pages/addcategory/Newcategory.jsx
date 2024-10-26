@@ -3,24 +3,34 @@ import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import Sidebar from '../../component/sidebar/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 function Newcategory() {
+    const { isAuthenticated, jwtToken } = useAuth();
     const navigate = useNavigate();
     const [category, setCategory] = useState('');
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${jwtToken}`
+        }
+    }
 
     async function handleSubmit() {
         const data = {
             categoryName : category
         };
 
-        const response = await axios.post(`http://localhost:8080/api/v1/category`,data)
-          .then(response => {
-            console.log('Category details updated:', response.data);
-        })
-        .catch(error => {
-            console.error("There was an error updating the category!", error);
-        });
-        navigate(`/categorytable`)
+        if (isAuthenticated) {
+            const response = await axios.post(`http://localhost:8080/api/v1/category`,data,config)
+            .then(response => {
+                console.log('Category details updated:', response.data);
+            })
+            .catch(error => {
+                console.error("There was an error updating the category!", error);
+            });
+            navigate(`/categorytable`)
+        }
     }
 
   return (

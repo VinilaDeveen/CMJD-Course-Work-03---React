@@ -3,18 +3,28 @@ import CategoryRoundedIcon from '@mui/icons-material/CategoryRounded';
 import Sidebar from '../../component/sidebar/Sidebar';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 function Categoryview() {
+  const{ isAuthenticated, jwtToken } = useAuth();
   const{categoryId} = useParams();
   const[items, setItems] = useState([]);
   const[categoryName, setCategoryName] = useState('');
 
   useEffect(() => {
-    loadCategoryDetails();
-  },[categoryId])
+    if(isAuthenticated){
+      loadCategoryDetails();
+    }
+  },[isAuthenticated,categoryId])
+
+  const config = {
+    headers : {
+      Authorization : `Bearer ${jwtToken}`
+    }
+  }
 
   async function loadCategoryDetails() {
-    const response = await axios.get(`http://localhost:8080/api/v1/category/${categoryId}`)
+    const response = await axios.get(`http://localhost:8080/api/v1/category/${categoryId}`, config)
     .then( response => {
       setCategoryName(response.data.categoryName);
       setItems(response.data.items);

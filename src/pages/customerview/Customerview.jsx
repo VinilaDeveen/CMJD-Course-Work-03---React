@@ -3,8 +3,10 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import Sidebar from '../../component/sidebar/Sidebar';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 function Customerview() {
+  const { isAuthenticated, jwtToken } = useAuth();
   const{id} = useParams();
   const[custname, setName] = useState('');
   const[address, setAddress] = useState('');
@@ -12,11 +14,19 @@ function Customerview() {
   const[phoneNo, setPhoneNo] = useState('');
 
   useEffect(() => {
-    loadCustomerDetails();
-  },[id])
+    if (isAuthenticated){
+      loadCustomerDetails();
+    }
+  },[isAuthenticated,id])
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`
+    }
+  }
 
   async function loadCustomerDetails() {
-    const response = await axios.get(`http://localhost:8080/api/v1/customer/${id}`)
+    const response = await axios.get(`http://localhost:8080/api/v1/customer/${id}`, config)
     .then( response => {
       setName(response.data.custname);
       setAddress(response.data.address);
@@ -31,7 +41,7 @@ function Customerview() {
   const handleSubmit = (e) => {
     const customer = {id,custname,address,city,phoneNo};
 
-    const response = axios.put(`http://localhost:8080/api/v1/customer/${id}`,customer)
+    const response = axios.put(`http://localhost:8080/api/v1/customer/${id}`,customer, config)
       .then(response => {
         console.log('Category details updated:', response.data);
     })

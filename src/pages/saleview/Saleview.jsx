@@ -4,8 +4,11 @@ import Sidebar from '../../component/sidebar/Sidebar';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 function Saleview() {
+  const { isAuthenticated, jwtToken } = useAuth();
+
   const { saleId } = useParams();
   const [salesItems, setSalesItem] = useState([]);
   const [custname, setCustName] = useState('');
@@ -14,13 +17,21 @@ function Saleview() {
   const [saleDateTime, setSaleDateTime] = useState('');
   const [totalPrice, setTotalPrice] = useState(0.00);
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`
+    }
+  }
+
   useEffect(() => {
-    loadSaleDetails();
-  }, []);
+    if (isAuthenticated) {
+      loadSaleDetails();
+    }
+  }, [isAuthenticated]);
 
   async function loadSaleDetails() {
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/sale/${saleId}`);
+      const response = await axios.get(`http://localhost:8080/api/v1/sale/${saleId}`, config);
       setCustName(response.data.customer.custname);
       setAddress(response.data.customer.address);
       setCity(response.data.customer.city);

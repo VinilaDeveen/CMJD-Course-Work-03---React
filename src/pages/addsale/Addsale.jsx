@@ -5,8 +5,11 @@ import LocalMallIcon from '@mui/icons-material/LocalMall';
 import Sidebar from '../../component/sidebar/Sidebar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 function Addsale() {
+  const { isAuthenticated, jwtToken } = useAuth();
+
   const [items, setItems] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [orderItems, setOrderItems] = useState([]);
@@ -15,10 +18,18 @@ function Addsale() {
   const [qty, setQty] = useState('');
   const navigate = useNavigate();
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`
+    }
+  }
+
   useEffect(() => {
-    loadCustomer();
-    loadItems();
-  }, []);
+    if (isAuthenticated) {
+      loadCustomer();
+      loadItems();
+    }
+  }, [isAuthenticated]);
 
   const handleAddItem = () => {
     const selectedItem = items.find(item => item.itemId === parseInt(itemId));
@@ -38,41 +49,47 @@ function Addsale() {
     }
   
     const data = {
-      customer: { id: custId }, // Assuming your backend requires only the customer ID
+      customer: { id: custId }, 
       itemDatails: orderItems.map(item => ({
         itemId: items.find(i => i.name === item.name).itemId,
         name: item.name,
         qty: parseInt(item.qty),
-        unitPrice: items.find(i => i.name === item.name).unitPrice // Assuming the unit price is fetched from items
+        unitPrice: items.find(i => i.name === item.name).unitPrice 
       }))
     };
   
-    try {
-      const response = await axios.post('http://localhost:8080/api/v1/sale', data);
-      alert('Sale created successfully!');
-      navigate('/salestable'); // Redirect to the sales page or any relevant page after successful submission
-    } catch (error) {
-      console.error("There was an error creating the sale!", error);
-      alert('Error occurred while creating sale.');
+    if (isAuthenticated) {
+      try {
+        const response = await axios.post('http://localhost:8080/api/v1/sale', data , config);
+        alert('Sale created successfully!');
+        navigate('/salestable');
+      } catch (error) {
+        console.error("There was an error creating the sale!", error);
+        alert('Error occurred while creating sale.');
+      }
     }
   }
   
 
   async function loadItems() {
-    try {
-      const response = await axios.get(`http://localhost:8080/api/v1/item`);
-      setItems(response.data);
-    } catch (error) {
-      console.error("There was an error fetching the item list!", error);
+    if (isAuthenticated) {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/v1/item`,config);
+        setItems(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the item list!", error);
+      }
     }
   }
 
   async function loadCustomer() {
-    try {
-      const response = await axios.get(`http://localhost:8080/api/v1/customer`);
-      setCustomers(response.data);
-    } catch (error) {
-      console.error("There was an error fetching the customer list!", error);
+    if (isAuthenticated) {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/v1/customer`, config);
+        setCustomers(response.data);
+      } catch (error) {
+        console.error("There was an error fetching the customer list!", error);
+      }
     }
   }
 

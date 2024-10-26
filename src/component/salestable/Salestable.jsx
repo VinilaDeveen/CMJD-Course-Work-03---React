@@ -8,18 +8,28 @@ import { Link } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Grid from '@mui/material/Grid';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 
 function Salestable() {
+  const { isAuthenticated, jwtToken } = useAuth();
   const [sales, setSales] = React.useState([]);
 
   React.useEffect(() => {
-    loadSales();
-  },[]);
+    if (isAuthenticated) {
+      loadSales();
+    }
+  },[isAuthenticated]);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`
+    }
+  }
 
   async function loadSales() {
     try {
-      const response = await axios.get(`http://localhost:8080/api/v1/sale`);
+      const response = await axios.get(`http://localhost:8080/api/v1/sale`, config);
       const Sales = response.data.map(sale => ({
         ...sale,
         customer: sale.customer.custname // Map category name for each item
@@ -32,7 +42,7 @@ function Salestable() {
 
   const handleDelete = (saleId) => {
     if (window.confirm("Are you sure you want to delete this sale?")) {
-      axios.delete(`http://localhost:8080/api/v1/sale/${saleId}`)
+      axios.delete(`http://localhost:8080/api/v1/sale/${saleId}`, config)
         .then(response => {
           loadSales();
         })
@@ -63,7 +73,7 @@ function Salestable() {
               </div>
             </Link>
             <div
-                className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900'
+                className='bg-cover mt-2 px-2 h-[35px] bg-red-500 text-slate-50 rounded-3xl flex items-center justify-center hover:bg-red-900 cursor-pointer'
                 onClick={() => handleDelete(params.row.saleId)}
               >
                 <DeleteRoundedIcon className='mr-2' />

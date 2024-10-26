@@ -11,23 +11,29 @@ function Newcustomer() {
     const[address, setAddress] = useState('');
     const[city, setCity] = useState('');
     const[phoneNo, setPhoneNo] = useState('');
+    const[username, setUsername] = useState('');
+    const[password, setPassword] = useState('');
 
     async function handleSubmit() {
         const data = {
             custname : custname,
             address : address,
             city : city,
-            phoneNo : phoneNo
+            phoneNo : phoneNo,
+            username : username,
+            password : password
         };
 
-        const response = await axios.post(`http://localhost:8080/api/v1/customer`,data)
-          .then(response => {
-            console.log('Customer details updated:', response.data);
-        })
-        .catch(error => {
-            console.error("There was an error updating the customer!", error);
-        });
-        navigate(`/customertable`)
+        if (isAuthenticated) {
+            const response = await axios.post(`http://localhost:8080/auth/register`,data)
+            .then(response => {
+                console.log('Customer details updated:', response.data);
+            })
+            .catch(error => {
+                console.error("There was an error updating the customer!", error);
+            });
+            navigate(`/customertable`)
+        }
       };
 
   return (
@@ -39,7 +45,7 @@ function Newcustomer() {
             <div>
             <span className='font text-3xl text-slate-600 mx-5'>Add New Customer</span>
             </div>
-            <div className='flex m-10 shadow-2xl rounded-3xl w-full'>
+            <div className='flex m-8 shadow-2xl rounded-3xl w-full'>
                 <div className='my-40'>
                 <PersonAddAltRoundedIcon 
                             sx={{ fontSize: { xs: 60, sm: 100, md: 150 } }} 
@@ -69,26 +75,56 @@ function Newcustomer() {
                         />
                     </div>
                 
-                    <div className='w-full'>
-                        <label className='flex pt-8 text-lg text-slate-800'>City:</label>
-                        <input 
-                            type="text" 
-                            name='city'
-                            onChange={(e) => setCity(e.target.value)}
-                            placeholder='Enter your city' 
-                            className='border-b-2 border-slate-300 w-full pt-3 outline-none placeholder:text-slate-400'
-                        />
+                    
+
+                    <div className='flex gap-4'>
+                        <div className='w-full'>
+                            <label className='flex pt-8 text-lg text-slate-800'>City:</label>
+                            <input 
+                                type="text" 
+                                name='city'
+                                onChange={(e) => setCity(e.target.value)}
+                                placeholder='Enter your city' 
+                                className='border-b-2 border-slate-300 w-full pt-3 outline-none placeholder:text-slate-400'
+                            />
+                        </div>
+
+                        <div className='w-full'>
+                            <label className='flex pt-8 text-lg text-slate-800'>Phone No:</label>
+                            <input 
+                                type="text" 
+                                name='phoneNo'
+                                onChange={(e) => setPhoneNo(e.target.value)}
+                                placeholder='Enter your phone no' 
+                                className='border-b-2 border-slate-300 w-full pt-3 outline-none placeholder:text-slate-400'
+                            />
+                        </div>
                     </div>
 
-                    <div className='w-full'>
-                        <label className='flex pt-8 text-lg text-slate-800'>Phone No:</label>
-                        <input 
-                            type="text" 
-                            name='phoneNo'
-                            onChange={(e) => setPhoneNo(e.target.value)}
-                            placeholder='Enter your phone no' 
-                            className='border-b-2 border-slate-300 w-full pt-3 outline-none placeholder:text-slate-400'
-                        />
+                    
+
+                    <div className='flex gap-4'>
+                        <div className='w-full'>
+                            <label className='flex pt-8 text-lg text-slate-800'>User name:</label>
+                            <input 
+                                type="text" 
+                                name='username'
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder='Enter your user name' 
+                                className='border-b-2 border-slate-300 w-full pt-3 outline-none placeholder:text-slate-400'
+                            />
+                        </div>
+
+                        <div className='w-full'>
+                            <label className='flex pt-8 text-lg text-slate-800'>Password:</label>
+                            <input 
+                                type="text" 
+                                name='password'
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder='Enter your password' 
+                                className='border-b-2 border-slate-300 w-full pt-3 outline-none placeholder:text-slate-400'
+                            />
+                        </div>
                     </div>
 
                     <div className='w-full'>

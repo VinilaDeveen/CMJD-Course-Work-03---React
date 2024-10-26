@@ -3,8 +3,11 @@ import LocalMallRoundedIcon from '@mui/icons-material/LocalMallRounded';
 import Sidebar from '../../component/sidebar/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 function Newitem() {
+    const{ isAuthenticated, jwtToken } = useAuth();
+
     const[categories, setCategories] = useState([]);
     const navigate = useNavigate();
     const[name, setName] = useState('');
@@ -13,12 +16,20 @@ function Newitem() {
     const[categoryId, setCategoryId] = useState(0);
 
     useEffect(() => {
-        loadCategories();
-    },[])
+        if (isAuthenticated) {
+            loadCategories();
+        }
+    },[isAuthenticated])
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${jwtToken}`
+        }
+    }
 
     async function loadCategories() {
         try {
-          const response = await axios.get(`http://localhost:8080/api/v1/category`);
+          const response = await axios.get(`http://localhost:8080/api/v1/category`, config);
           setCategories(response.data);
         } catch (error) {
           console.error("There was an error fetching the category list!", error);
@@ -35,7 +46,7 @@ function Newitem() {
             }
         };
 
-        const response = await axios.post(`http://localhost:8080/api/v1/item`,data)
+        const response = await axios.post(`http://localhost:8080/api/v1/item`,data , config )
           .then(response => {
             console.log('Item details updated:', response.data);
         })

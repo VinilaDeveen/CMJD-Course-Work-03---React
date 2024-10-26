@@ -6,14 +6,15 @@ import PointOfSaleRoundedIcon from '@mui/icons-material/PointOfSaleRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/Logo.png'
+import { useAuth } from '../../context/AuthContext';
 
 const Sidebar = () => {
+    const { logout } = useAuth();
+
     return (
         <div className='bg-slate-300 w-full w-full h-screen'>
             <div className='py-2 px-2 sm:px-[50px]'>
-                <Link to="/">
-                    <img src={Logo} className='w-[150px]'/>
-                </Link> 
+                <img src={Logo} className='w-[150px]'/>
             </div>
             <hr/>
             <div className='flex flex-col text-xl sm:text-2xl text-slate-600'>
@@ -46,12 +47,11 @@ const Sidebar = () => {
                         </li>
                     </Link>
                 
-                    <Link to="/" style={{textDecoration:"none"}}>
-                        <li className='absolute bottom-0 left-0 flex items-center px-5 sm:px-14 py-3 hover:bg-slate-50 hover:w-full'>
-                            <LogoutRoundedIcon className='mr-4'/>
-                            <span>Log-out</span>
-                        </li>
-                    </Link>
+                    
+                    <li className='absolute bottom-0 left-0 flex items-center px-5 sm:px-14 py-3 hover:bg-slate-50 hover:w-full cursor-pointer' onClick={logout}>
+                        <LogoutRoundedIcon className='mr-4'/>
+                        <span>Log-out</span>
+                    </li>   
                 </ul>   
             </div>
         </div>
