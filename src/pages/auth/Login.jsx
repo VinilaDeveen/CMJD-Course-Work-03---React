@@ -84,7 +84,10 @@ function Login() {
                         </button>
                     </div>
                 </form>
-                <Link to='/customertable/newcustomer'> Register </Link>
+                <div className='pt-5 flex text-center justify-center gap-2'>
+                    <span className='text-slate-600'>New to SHOP MASTER? </span>
+                    <Link to='/customertable/newcustomer' className='text-blue-800'> Register </Link>
+                </div>
             </div>
         </div>
     </div>

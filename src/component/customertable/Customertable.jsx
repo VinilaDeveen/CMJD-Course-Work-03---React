@@ -90,14 +90,6 @@ function Customertable() {
             <Grid item>
               <span className='text-xl text-slate-600'>Customer List</span>
             </Grid>
-            <Grid item>
-              <Link to='/customertable/newcustomer' style={{ textDecoration: 'none' }}>
-                <span className='p-2 border-solid border-2 border-green-700 rounded-lg text-green-700 hover:border-slate-900 hover:text-slate-900'>
-                  <AddCircleRoundedIcon className='mr-2 hover:text-slate-900'/>
-                  Add New
-                </span>
-              </Link>
-            </Grid>
           </Grid>
           <Box className='pt-5'>
             <DataGrid
