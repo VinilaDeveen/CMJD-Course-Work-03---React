@@ -41,7 +41,7 @@ function Itemtable() {
 
   const handleDelete = (itemId) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
-      axios.delete(`http://localhost:8080/api/v1/item/${itemId}`)
+      axios.delete(`http://localhost:8080/api/v1/item/${itemId}`,config)
         .then(response => {
           loadItems();
         })
